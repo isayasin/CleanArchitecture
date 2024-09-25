@@ -3,6 +3,7 @@ using CleanArchitecture.Application.Feature.CarFeatures.Queries.GetAllCar;
 using CleanArchitecture.Domain.Dtos;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Prensentation.Abstraction;
+using EntityFrameworkCorePagination.Nuget.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ public sealed class CarsController : ApiController
     [HttpPost("[action]")]
     public async Task<IActionResult> GetAll(GetAllCarQuery request, CancellationToken cancellationToken)
     {
-        IList<Car> response = await _mediator.Send(request, cancellationToken);
+        PaginationResult<Car> response = await _mediator.Send(request, cancellationToken);
         return Ok(response);
     }
 }
