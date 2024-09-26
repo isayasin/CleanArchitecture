@@ -15,10 +15,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ICarService, CarServices>();
-
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<ExceptionMiddleware>();
-
-//Hatali UnitOfWork
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUnitOfWork>(cfr => cfr.GetRequiredService<AppDbContext>());
 
@@ -27,7 +25,8 @@ builder.Services.AddAutoMapper(typeof(CleanArchitecture.Persistance.AssemblyRefe
 
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity<User, IdentityRole>(/*options => options.Password.RequireNonAlphanumeric = false*/)
+.AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(CleanArchitecture.Prensentation.AssemblyReference).Assembly);
 
