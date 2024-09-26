@@ -41,7 +41,7 @@ public sealed class CarServices : ICarService
 
     public async Task<PaginationResult<Car>> GetAllAsync(GetAllCarQuery request, CancellationToken cancellationToken)
     {
-        PaginationResult<Car> cars = await _carRepository.GetAll().Where(p => p.Name.ToLower().Contains(request.Search.ToLower())).ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
+        PaginationResult<Car> cars = await _carRepository.Where(p => p.Name.ToLower().Contains(request.Search.ToLower())).ToPagedListAsync(request.PageNumber, request.PageSize, cancellationToken);
         return cars;
     }
 }
