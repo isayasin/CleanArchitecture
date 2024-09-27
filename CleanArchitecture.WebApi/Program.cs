@@ -2,6 +2,8 @@ using CleanArchitecture.Application.Behaviors;
 using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
+using CleanArchitecture.Infrastructure.Models;
+using CleanArchitecture.Infrastructure.Services;
 using CleanArchitecture.Persistance.Context;
 using CleanArchitecture.Persistance.Repositories;
 using CleanArchitecture.Persistance.Services;
@@ -11,6 +13,7 @@ using GenericRepository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +22,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUnitOfWork>(cfr => cfr.GetRequiredService<AppDbContext>());
-
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<IMailService, MailService>(provider =>
+    new MailService(provider.GetRequiredService<IOptions<SmtpSettings>>()));
 
 builder.Services.AddAutoMapper(typeof(CleanArchitecture.Persistance.AssemblyReference).Assembly);
 

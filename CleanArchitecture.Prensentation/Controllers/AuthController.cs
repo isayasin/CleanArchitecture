@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.Feature.AuthFeatures.Commands.Register;
+using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Dtos;
 using CleanArchitecture.Prensentation.Abstraction;
 using MediatR;
@@ -9,14 +10,30 @@ namespace CleanArchitecture.Prensentation.Controllers;
 
 public sealed class AuthController : ApiController
 {
-    public AuthController(IMediator mediator) : base(mediator)
+    private readonly IMailService _mailService;
+    public AuthController(IMediator mediator, IMailService mailService) : base(mediator)
     {
+        _mailService = mailService;
     }
 
     [HttpPost("[action]")]
     public async Task<IActionResult> Register(RegisterCommand request, CancellationToken cancellationToken)
     {
         MessageResponse response = await _mediator.Send(request, cancellationToken);
+
+        // Kayıt başarılı ise e-posta gönder
+        if (response.Message == "Kullanıcı kaydı başarıyla tamamlandı")
+        {
+            var emailSubject = "Kaydın başarıyla gerçekleşti";
+            var emailBody = "Hoşgeldin! KAydın başarı ile gerçekleşti.";
+
+            // E-posta gönderme işlemi
+            await _mailService.SendMailAsync(request.Email, emailSubject, emailBody, cancellationToken);
+        }
         return Ok(response);
+
+
     }
 }
+
+
