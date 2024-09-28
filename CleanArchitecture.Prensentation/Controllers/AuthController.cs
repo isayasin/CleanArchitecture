@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Feature.AuthFeatures.Commands.Login;
+﻿using CleanArchitecture.Application.Feature.AuthFeatures.Commands.CreateNewTokenByRefreshToken;
+using CleanArchitecture.Application.Feature.AuthFeatures.Commands.Login;
 using CleanArchitecture.Application.Feature.AuthFeatures.Commands.Register;
 using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Dtos;
@@ -40,8 +41,13 @@ public sealed class AuthController : ApiController
     {
         LoginCommandResponse response = await _mediator.Send(request, cancellationToken);
         return Ok(response);
+    }
 
-
+    [HttpPost("[action]")]
+    public async Task<IActionResult> CreateTokenByRefreshToken([FromForm] CreateNewTokenByRefreshTokenCommand request, CancellationToken cancellationToken)
+    {
+        LoginCommandResponse response = await _mediator.Send(request, cancellationToken);
+        return Ok(response);
     }
 }
 
