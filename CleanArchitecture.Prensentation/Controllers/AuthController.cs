@@ -5,6 +5,7 @@ using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Dtos;
 using CleanArchitecture.Prensentation.Abstraction;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.Prensentation.Controllers;
@@ -19,6 +20,7 @@ public sealed class AuthController : ApiController
     }
 
     [HttpPost("[action]")]
+    [AllowAnonymous] //Authorize kullanmak istemediğimiz endpointlere ekliyoruz
     public async Task<IActionResult> Register([FromForm] RegisterCommand request, CancellationToken cancellationToken)
     {
         MessageResponse response = await _mediator.Send(request, cancellationToken);
@@ -37,6 +39,7 @@ public sealed class AuthController : ApiController
 
 
     [HttpPost("[action]")]
+    [AllowAnonymous] //Authorize kullanmak istemediğimiz endpointlere ekliyoruz
     public async Task<IActionResult> Login([FromForm] LoginCommand request, CancellationToken cancellationToken)
     {
         LoginCommandResponse response = await _mediator.Send(request, cancellationToken);
