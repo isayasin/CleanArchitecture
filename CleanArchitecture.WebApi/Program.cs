@@ -1,7 +1,9 @@
+using CleanArchitecture.Application.Abstractions;
 using CleanArchitecture.Application.Behaviors;
 using CleanArchitecture.Application.Services;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Repositories;
+using CleanArchitecture.Infrastructure.Authentication;
 using CleanArchitecture.Infrastructure.Models;
 using CleanArchitecture.Infrastructure.Services;
 using CleanArchitecture.Persistance.Context;
@@ -27,6 +29,8 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IMailService, MailService>(provider =>
     new MailService(provider.GetRequiredService<IOptions<SmtpSettings>>()));
+
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 builder.Services.AddAuthentication().AddJwtBearer();
