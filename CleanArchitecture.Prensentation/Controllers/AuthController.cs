@@ -17,7 +17,7 @@ public sealed class AuthController : ApiController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Register(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Register([FromForm] RegisterCommand request, CancellationToken cancellationToken)
     {
         MessageResponse response = await _mediator.Send(request, cancellationToken);
 
