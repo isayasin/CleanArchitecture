@@ -2,6 +2,7 @@
 using CleanArchitecture.Application.Feature.CarFeatures.Queries.GetAllCar;
 using CleanArchitecture.Domain.Dtos;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Infrastructure.Authorization;
 using CleanArchitecture.Prensentation.Abstraction;
 using EntityFrameworkCorePagination.Nuget.Pagination;
 using MediatR;
@@ -12,6 +13,7 @@ public sealed class CarsController : ApiController
 {
     public CarsController(IMediator mediator) : base(mediator) { }
 
+    [RoleFilter("Admin")]
     [HttpPost("[action]")]
     public async Task<IActionResult> Create(CreateCarCommand request, CancellationToken cancellationToken)
     {
@@ -19,7 +21,7 @@ public sealed class CarsController : ApiController
         return Ok(response);
     }
 
-
+    [RoleFilter("GetAll")]
     [HttpPost("[action]")]
     public async Task<IActionResult> GetAll(GetAllCarQuery request, CancellationToken cancellationToken)
     {

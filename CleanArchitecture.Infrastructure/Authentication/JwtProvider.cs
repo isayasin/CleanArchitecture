@@ -23,6 +23,7 @@ public sealed class JwtProvider : IJwtProvider
     public async Task<LoginCommandResponse> CreateTokenAsync(User user)
     {
         var claims = new Claim[]{
+            new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Email, user.Email),
             new(JwtRegisteredClaimNames.Name, user.UserName),
             new("NamLastName", user.NameLastName)
