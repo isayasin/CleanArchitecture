@@ -15,7 +15,6 @@ using FluentValidation;
 using GenericRepository;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -31,6 +30,9 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpS
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IMailService, MailService>(provider =>
     new MailService(provider.GetRequiredService<IOptions<SmtpSettings>>()));
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
@@ -42,7 +44,7 @@ builder.Services.AddAutoMapper(typeof(CleanArchitecture.Persistance.AssemblyRefe
 
 string connectionString = builder.Configuration.GetConnectionString("SqlServer");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddIdentity<User, IdentityRole>(/*options => options.Password.RequireNonAlphanumeric = false*/)
+builder.Services.AddIdentity<User, Role>(/*options => options.Password.RequireNonAlphanumeric = false*/)
 .AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(CleanArchitecture.Prensentation.AssemblyReference).Assembly);
