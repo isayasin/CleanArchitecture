@@ -3,7 +3,7 @@ using CleanArchitecture.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.InstallServices(builder.Configuration, typeof(IServiceInstaller).Assembly);
+builder.Services.InstallServices(builder.Configuration, builder.Host, typeof(IServiceInstaller).Assembly);
 
 var app = builder.Build();
 
